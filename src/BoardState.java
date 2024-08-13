@@ -22,13 +22,22 @@ public class BoardState implements Comparable<BoardState> {
 	private static HashMap<Byte, Character> fieldToChar;
 	static {
 		charToField = new HashMap<Character, Byte>();
-		charToField.put('0', WALL);
-		charToField.put('S', GOAL);
-		charToField.put('R', PLAYER);
-		charToField.put('+', (byte) (PLAYER | GOAL));
-		charToField.put('B', BOX);
-		charToField.put('*', (byte) (BOX | GOAL));
-		charToField.put(' ', (byte) 0);
+//		charToField.put('#', WALL);
+//		charToField.put('.', GOAL);
+//		charToField.put('@', PLAYER);
+//		charToField.put('+', (byte) (PLAYER | GOAL));
+//		charToField.put('B', BOX);
+//		charToField.put('*', (byte) (BOX | GOAL));
+//		charToField.put(' ', (byte) 0);
+
+
+		charToField.put('#', WALL);          // Wall
+		charToField.put('.', GOAL);          // Goal
+		charToField.put('@', PLAYER);        // Player
+		charToField.put('*', (byte) (BOX | GOAL)); // Box on Goal
+		charToField.put('$', BOX);           // Box
+		charToField.put(' ', (byte) 0);      // Empty space
+
 
 		fieldToChar = new HashMap<Byte, Character>();
 		for (Entry<Character, Byte> entry : charToField.entrySet()) {
@@ -282,30 +291,74 @@ public class BoardState implements Comparable<BoardState> {
 	 * @return the Board state object
 	 * @throws IOException if the Sokoban file does not exist
 	 */
+//	public static BoardState parseBoardInput(String boardInput) throws IOException {
+//		BufferedReader reader = new BufferedReader(new FileReader(boardInput));
+//		int width = Integer.parseInt(reader.readLine());
+//		int height = Integer.parseInt(reader.readLine());
+//		byte[][] boardPoints = new byte[height][width];
+//		Point player = new Point();
+//		Set<Point> goals = new HashSet<Point>();
+//		Set<Point> boxes = new HashSet<Point>();
+//
+//		String line;
+//		for (int row = 0; row < height && (line = reader.readLine()) != null; row++) {
+//			for (int col = 0; col < width && col < line.length(); col++) {
+//				byte field = charToField.get(line.charAt(col));
+//				boardPoints[row][col] = field;
+//				if ((field & PLAYER) == PLAYER)
+//					player = new Point(row, col);
+//				if ((field & GOAL) == GOAL)
+//					goals.add(new Point(row, col));
+//				if ((field & BOX) == BOX)
+//					boxes.add(new Point(row, col));
+//			}
+//		}
+//
+//		reader.close();
+//		return new BoardState(boardPoints, player, goals, boxes);
+//	}
 	public static BoardState parseBoardInput(String boardInput) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(boardInput));
 		int width = Integer.parseInt(reader.readLine());
 		int height = Integer.parseInt(reader.readLine());
 		byte[][] boardPoints = new byte[height][width];
-		Point player = new Point();
+		Point player = null; // Initialize to null
 		Set<Point> goals = new HashSet<Point>();
 		Set<Point> boxes = new HashSet<Point>();
 
 		String line;
 		for (int row = 0; row < height && (line = reader.readLine()) != null; row++) {
 			for (int col = 0; col < width && col < line.length(); col++) {
-				byte field = charToField.get(line.charAt(col));
+				char currentChar = line.charAt(col);
+				Byte field = charToField.get(currentChar);
+
+				if (field == null) {
+					throw new IllegalArgumentException("Unexpected character '" + currentChar + "' in input file");
+				}
+
 				boardPoints[row][col] = field;
-				if ((field & PLAYER) == PLAYER)
+				if ((field & PLAYER) == PLAYER) {
+					if (player != null) {
+						throw new IllegalStateException("Multiple players found in the input file.");
+					}
 					player = new Point(row, col);
-				if ((field & GOAL) == GOAL)
+				}
+				if ((field & GOAL) == GOAL) {
 					goals.add(new Point(row, col));
-				if ((field & BOX) == BOX)
+				}
+				if ((field & BOX) == BOX) {
 					boxes.add(new Point(row, col));
+				}
 			}
 		}
 
 		reader.close();
+
+		if (player == null) {
+			throw new IllegalStateException("No player found in the input file.");
+		}
+
 		return new BoardState(boardPoints, player, goals, boxes);
 	}
+
 }

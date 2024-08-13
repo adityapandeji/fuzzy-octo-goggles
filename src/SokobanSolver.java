@@ -13,9 +13,18 @@ public class SokobanSolver {
 
 	public static void parseArguments(String[] args) {
 		try {
+
+//			if (args.length == 0) {
+//				System.out.println("No arguments provided.");
+//				// Handle the case where no arguments are provided
+//				return;
+//			}
 			// TODO some form of input validation
 			String flag = args[0];
 			String puzzlePath = args[1];
+
+//			String flag ="-b";
+//			String puzzlePath="C:\\Users\\Aditya\\IdeaProjects\\SokobanSolver\\resource\\Level1.txt";
 			BoardState initialBoard = BoardState.parseBoardInput(puzzlePath);
 			AbstractSolver solver = null;
 			System.out.println(initialBoard);
