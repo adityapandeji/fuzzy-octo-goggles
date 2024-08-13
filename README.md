@@ -1,9 +1,9 @@
 Sokoban Solver
 ==============
 
-Forrest Knight
+Pande Aditya
 
-CS 480 - Artificial Intelligence - Fall 2017
+CS 480 -Fall 2017(I know I’m a bit behind)
 
 Usage
 -----
