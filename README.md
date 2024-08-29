@@ -1,7 +1,6 @@
-Sokoban Solver
+Sokoban Solver by Pande Aditya
 ==============
-
-Pande Aditya
+Sokoban is a classic puzzle game where the player pushes boxes onto target locations in a confined space. This project implements a Sokoban solver using Java, which applies various algorithms to find the optimal solution for given Sokoban puzzles.
 
 CS 480 -Fall 2017(I know I’m a bit behind)
 
